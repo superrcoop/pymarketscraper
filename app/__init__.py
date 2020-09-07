@@ -1,5 +1,5 @@
 from flask import Flask
-from pyscraper import getInfo
+from app.pyscraper import getInfo
 app = Flask(__name__)
 app.config["DEBUG"] = True
 
@@ -9,4 +9,5 @@ def home():
     return getInfo()
 
 
-app.run()
+if __name__ == "__main__":
+    app.run()
