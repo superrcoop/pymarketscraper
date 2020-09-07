@@ -8,6 +8,12 @@ app.config["DEBUG"] = True
 def home():
     return getInfo()
 
+# A welcome message to test our server
 
-if __name__ == "__main__":
-    app.run()
+
+@app.route('/')
+def index():
+    return "<h1>Welcome to our server !!</h1>"
+
+
+app.run()
