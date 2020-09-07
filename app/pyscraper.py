@@ -2,16 +2,20 @@ from selenium import webdriver
 from bs4 import BeautifulSoup
 import pandas as pd
 
+GOOGLE_CHROME_PATH = '/app/.apt/usr/bin/google_chrome'
+CHROMEDRIVER_PATH = '/app/.chromedriver/bin/chromedriver'
+
 
 def getInfo():
     """""
     This function collects data from ja-mis and return market prices
     """""
-    options = webdriver.ChromeOptions()
-
-    options.headless = True
-    driver = webdriver.Chrome(chrome_options=options)
-    # IWebDriver driver = new ChromeDriver(options)
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.add_argument('--disable-gpu')
+    chrome_options.add_argument('--no-sandbox')
+    chrome_options.binary_location = GOOGLE_CHROME_PATH
+    driver = webdriver.Chrome(
+        execution_path=CHROMEDRIVER_PATH, chrome_options=chrome_options)
     # marketData=[]
     driver.get("http://www.ja-mis.com/Companionsite/home.aspx")
     content = driver.page_source
