@@ -14,7 +14,8 @@ def getInfo():
     chrome_options.add_argument('--disable-gpu')
     chrome_options.add_argument('--no-sandbox')
     chrome_options.binary_location = GOOGLE_CHROME_PATH
-    driver = webdriver.Chrome(CHROMEDRIVER_PATH, chrome_options=chrome_options)
+    driver = webdriver.Chrome(
+        executable_path=CHROMEDRIVER_PATH, chrome_options=chrome_options)
     # marketData=[]
     driver.get("http://www.ja-mis.com/Companionsite/home.aspx")
     content = driver.page_source
