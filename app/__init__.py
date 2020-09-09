@@ -1,7 +1,9 @@
 from flask import Flask
-from app.pyscraper import getInfo
+from app.pyscraper import getInfo, get_all_prices
 app = Flask(__name__)
 app.config["DEBUG"] = True
+
+app.config["TEMPLATES_AUTO_RELOAD"] = True
 
 
 @app.route('/api/v1/marketInfo/prices/fruits', methods=['GET'])
