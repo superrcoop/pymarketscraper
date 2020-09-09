@@ -5,15 +5,41 @@ app.config["DEBUG"] = True
 
 
 @app.route('/api/v1/marketInfo/prices/fruits', methods=['GET'])
-def home():
-    return getInfo()
+def fruits_prices():
+    return get_fruits_prices()
 
-# A welcome message to test our server
+
+@app.route('/api/v1/marketInfo/prices/herbs', methods=['GET'])
+def herbs_prices():
+    return get_herbs_prices()
+
+
+@app.route('/api/v1/marketInfo/prices/legumes', methods=['GET'])
+def legumes_prices():
+    return get_legumes_prices()
+
+
+@app.route('/api/v1/marketInfo/prices/vegetable', methods=['GET'])
+def vegetables_prices():
+    return get_vegetable_prices()
+
+
+@app.route('/api/v1/marketInfo/prices/crops', methods=['GET'])
+def crops_prices():
+    return get_crops_prices()
+
+
+@app.route('/api/v1/marketInfo/prices', methods=['GET'])
+def all_prices():
+    return get_all_prices()
 
 
 @app.route('/')
 def index():
-    return "<h1>Welcome to our server !!</h1>"
+    '''
+    A welcome message for the server
+    '''
+    return getInfo()
 
 
 if __name__ == "__main__":
