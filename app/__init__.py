@@ -1,5 +1,5 @@
 from flask import Flask
-from app.pyscraper import getInfo, get_all_prices
+from app.pyscraper import getInfo, get_all_prices, get_fruits_prices
 app = Flask(__name__)
 app.config["DEBUG"] = True
 
