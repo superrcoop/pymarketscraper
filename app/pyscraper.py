@@ -1,4 +1,7 @@
 from selenium import webdriver
+from selenium.webdriver.support.ui import Select
+
+import time
 from bs4 import BeautifulSoup
 import pandas as pd
 import os
@@ -10,9 +13,9 @@ chrome_options.add_argument('--disable-gpu')
 chrome_options.add_argument('--no-sandbox')
 chrome_options.add_argument('headless')
 chrome_options.binary_location = chrome_bin
-#driver = webdriver.Chrome()
-driver = webdriver.Chrome(
-    executable_path=CHROMEDRIVER_PATH, chrome_options=chrome_options)
+driver = webdriver.Chrome()
+# driver = webdriver.Chrome(
+#   executable_path=CHROMEDRIVER_PATH, chrome_options=chrome_options)
 
 
 def getInfo():
@@ -31,19 +34,29 @@ def get_all_prices():
     """""
     This function collects data from ja-mis and return market prices
     """""
+    json_array = []
 
     driver.get("http://www.ja-mis.com/Companionsite/home.aspx")
-    content = driver.page_source
-    marketInfo = BeautifulSoup(content, features="html.parser")
-    marketInfoDate = marketInfo.find(id="ctl00_ContentPlaceHolder1_weekending")
-    json_array = []
-    for row in marketInfo.find(id="hor-minimalist-b").tbody.find_all('tr'):
-        json_data = {'Item': '', 'Type': '', 'FarmGate': '',
-                     'Municipal': '', 'Wholesale': '', 'Retail': ''}
-        if row.get_text():
-            for idx, td in enumerate(row.find_all('td')):
-                json_data[list(json_data)[idx]] = td.get_text()
-            json_array.append(json_data)
+    # b.find_element_by_xpath("//select[@name='element_name']/option[text()='option_text']").click()
+
+    select = Select(driver.find_element_by_id(
+        'ctl00_ContentPlaceHolder1_ddl_CategoryName'))
+    for option in select.options:
+        select.select_by_index(select.options.index(option))
+        print(select.options.index(option))
+        content = driver.page_source
+        # time.sleep(10)
+        marketInfo = BeautifulSoup(content, features="html.parser")
+        marketInfoDate = marketInfo.find(
+            id="ctl00_ContentPlaceHolder1_weekending")
+        for row in marketInfo.find(id="hor-minimalist-b").tbody.find_all('tr'):
+            json_data = {'Item': '', 'Type': '', 'FarmGate': '',
+                         'Municipal': '', 'Wholesale': '', 'Retail': ''}
+            if row.get_text():
+                for idx, td in enumerate(row.find_all('td')):
+                    json_data[list(json_data)[idx]] = td.get_text()
+                json_array.append(json_data)
+                # print(json_data)
     if not json_array:
         json_obj = {'status': '404', 'message': 'not found',
                     'request': 'GET /api/v1/marketInfo/prices', 'data': []}
