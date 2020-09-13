@@ -63,11 +63,12 @@ def get_fruits_prices():
     json_array = []
 
     for row in marketInfo.find(id="hor-minimalist-b").tbody.find_all('tr'):
-        json_data = {'Item': '', 'Type': '', 'FarmGate': '', 'Category': 'Fruits',
+        json_data = {'Item': '', 'Type': '', 'FarmGate': '',
                      'Municipal': '', 'Wholesale': '', 'Retail': ''}
         if row.get_text():
             for idx, td in enumerate(row.find_all('td')):
                 json_data[list(json_data)[idx]] = td.get_text()
+                json_data['Category'] = 'Fruits'
             json_array.append(json_data)
     return json_array
 
@@ -87,11 +88,12 @@ def get_herbs_prices():
     json_array = []
 
     for row in marketInfo.find(id="hor-minimalist-b").tbody.find_all('tr'):
-        json_data = {'Item': '', 'Type': '', 'FarmGate': '', 'Category': 'Herbs & Spices',
+        json_data = {'Item': '', 'Type': '', 'FarmGate': '',
                      'Municipal': '', 'Wholesale': '', 'Retail': ''}
         if row.get_text():
             for idx, td in enumerate(row.find_all('td')):
                 json_data[list(json_data)[idx]] = td.get_text()
+                json_data['Category'] = 'Herbs & Spices'
             json_array.append(json_data)
     return json_array
 
@@ -111,11 +113,12 @@ def get_legumes_prices():
     json_array = []
 
     for row in marketInfo.find(id="hor-minimalist-b").tbody.find_all('tr'):
-        json_data = {'Item': '', 'Type': '', 'FarmGate': '', 'Category': 'Legumes',
+        json_data = {'Item': '', 'Type': '', 'FarmGate': '',
                      'Municipal': '', 'Wholesale': '', 'Retail': ''}
         if row.get_text():
             for idx, td in enumerate(row.find_all('td')):
                 json_data[list(json_data)[idx]] = td.get_text()
+                json_data['Category'] = 'Legumes'
             json_array.append(json_data)
     return json_array
 
@@ -135,11 +138,13 @@ def get_crops_prices():
     json_array = []
 
     for row in marketInfo.find(id="hor-minimalist-b").tbody.find_all('tr'):
-        json_data = {'Item': '', 'Type': '', 'FarmGate': '', 'Category': 'Root Crops',
+        json_data = {'Item': '', 'Type': '', 'FarmGate': '',
                      'Municipal': '', 'Wholesale': '', 'Retail': ''}
         if row.get_text():
             for idx, td in enumerate(row.find_all('td')):
                 json_data[list(json_data)[idx]] = td.get_text()
+
+                json_data['Category'] = 'Root Crops'
             json_array.append(json_data)
     return json_array
 
@@ -159,10 +164,12 @@ def get_veg_prices():
     json_array = []
 
     for row in marketInfo.find(id="hor-minimalist-b").tbody.find_all('tr'):
-        json_data = {'Item': '', 'Type': '', 'FarmGate': '', 'Category': 'Vegetables',
+        json_data = {'Item': '', 'Type': '', 'FarmGate': '',
                      'Municipal': '', 'Wholesale': '', 'Retail': ''}
         if row.get_text():
             for idx, td in enumerate(row.find_all('td')):
                 json_data[list(json_data)[idx]] = td.get_text()
+
+                json_data['Category'] = 'Vegetables'
             json_array.append(json_data)
     return json_array
