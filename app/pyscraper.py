@@ -1,10 +1,13 @@
 from selenium import webdriver
-from selenium.webdriver.support.ui import Select
-
+from selenium.webdriver.support.ui import Select, WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 import time
 from bs4 import BeautifulSoup
 import pandas as pd
 import os
+from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
+
+from selenium.webdriver.common.by import By
 
 chrome_bin = os.environ.get('GOOGLE_CHROME_BIN', "chromedriver")
 CHROMEDRIVER_PATH = '/app/.chromedriver/bin/chromedriver'
@@ -34,29 +37,11 @@ def get_all_prices():
     """""
     This function collects data from ja-mis and return market prices
     """""
-    json_array = []
-
     driver.get("http://www.ja-mis.com/Companionsite/home.aspx")
-    # b.find_element_by_xpath("//select[@name='element_name']/option[text()='option_text']").click()
-
-    select = Select(driver.find_element_by_id(
-        'ctl00_ContentPlaceHolder1_ddl_CategoryName'))
-    for option in select.options:
-        select.select_by_index(select.options.index(option))
-        print(select.options.index(option))
-        content = driver.page_source
-        # time.sleep(10)
-        marketInfo = BeautifulSoup(content, features="html.parser")
-        marketInfoDate = marketInfo.find(
-            id="ctl00_ContentPlaceHolder1_weekending")
-        for row in marketInfo.find(id="hor-minimalist-b").tbody.find_all('tr'):
-            json_data = {'Item': '', 'Type': '', 'FarmGate': '',
-                         'Municipal': '', 'Wholesale': '', 'Retail': ''}
-            if row.get_text():
-                for idx, td in enumerate(row.find_all('td')):
-                    json_data[list(json_data)[idx]] = td.get_text()
-                json_array.append(json_data)
-                # print(json_data)
+    content = driver.page_source
+    marketInfo = BeautifulSoup(content, features="html.parser")
+    marketInfoDate = marketInfo.find(id="ctl00_ContentPlaceHolder1_weekending")
+    json_array = get_fruits_prices()
     if not json_array:
         json_obj = {'status': '404', 'message': 'not found',
                     'request': 'GET /api/v1/marketInfo/prices', 'data': []}
@@ -72,25 +57,20 @@ def get_fruits_prices():
     This function collects data from ja-mis and return market prices
     """""
     driver.get("http://www.ja-mis.com/Companionsite/home.aspx")
+    element = driver.find_element_by_id(
+        'ctl00_ContentPlaceHolder1_ddl_CategoryName')
+    select = Select(element)
+    select.select_by_visible_text('Fruits')
+    WebDriverWait(driver, 1).until(EC.staleness_of(element))
     content = driver.page_source
     marketInfo = BeautifulSoup(content, features="html.parser")
-    marketInfoDate = marketInfo.find(id="ctl00_ContentPlaceHolder1_weekending")
-    categorySelect = marketInfo.find(
-        id="ctl00_ContentPlaceHolder1_ddl_CategoryName")
     json_array = []
 
     for row in marketInfo.find(id="hor-minimalist-b").tbody.find_all('tr'):
-        json_data = {'Item': '', 'Type': '', 'FarmGate': '',
+        json_data = {'Item': '', 'Type': '', 'FarmGate': '', 'Category': 'Fruits',
                      'Municipal': '', 'Wholesale': '', 'Retail': ''}
         if row.get_text():
             for idx, td in enumerate(row.find_all('td')):
                 json_data[list(json_data)[idx]] = td.get_text()
             json_array.append(json_data)
-    if not json_array:
-        json_obj = {'status': '404', 'message': 'not found',
-                    'request': 'GET /api/v1/marketInfo/prices', 'data': []}
-    else:
-        json_obj = {'status': '200', 'message': 'success', 'date': marketInfoDate.get_text(),
-                    'request': 'GET /api/v1/marketInfo/prices', 'data': json_array}
-    # print(json_array)
-    return json_obj
+    return json_array
